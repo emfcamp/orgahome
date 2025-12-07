@@ -109,7 +109,7 @@
             };
             shellHook = ''
               unset PYTHONPATH
-              export VIRTUAL_ENV=$(dirname $(dirname $(which python3)))
+              export VIRTUAL_ENV=$(dirname $(dirname $(command -v python3)))
               export FLASK_APP=orgahome
               export REPO_ROOT=$(git rev-parse --show-toplevel)
             '';
@@ -143,9 +143,25 @@
       formatter = forAllSystems ({ treefmtEval, ... }: treefmtEval.config.build.wrapper);
 
       checks = forAllSystems (
-        { treefmtEval, ... }:
+        {
+          treefmtEval,
+          pkgs,
+          devVirtualenv,
+          ...
+        }:
         {
           formatting = treefmtEval.config.build.check self;
+          ty =
+            pkgs.runCommand "ty"
+              {
+                nativeBuildInputs = [ devVirtualenv ];
+                inherit self;
+              }
+              ''
+                export VIRTUAL_ENV=$(dirname $(dirname $(command -v python3)))
+                ty check $self
+                touch $out  # success
+              '';
         }
       );
     };
