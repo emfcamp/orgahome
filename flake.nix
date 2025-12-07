@@ -134,7 +134,14 @@
             name = "orgahome";
             config = {
               Entrypoint = [ "${default}/bin/orgahome" ];
-              Cmd = [ "run" ];
+              Cmd = [
+                "run"
+                "--host"
+                "::"
+              ];
+              ExposedPorts = {
+                "5000/tcp" = { };
+              };
             };
           };
 
