@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% from "components/user_card.html" import user_card %}
-
 {% block title %}{{ user.display_name }} - EMF Orga Directory{% endblock %}
-
 {% block content %}
-<main class="container container-centered">
-    {{ user_card(user, link_to_detail=False, extra_classes='user-card-large') }}
-</main>
+    <main class="container container-centered">
+        {{ user_card(user, link_to_detail=False, extra_classes='user-card-large') }}
+    </main>
 {% endblock %}

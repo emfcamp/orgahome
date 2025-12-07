@@ -1,44 +1,43 @@
 {% macro user_card(user, link_to_detail=True, extra_classes='') %}
-<div class="user-card glass-card {{ extra_classes }}" data-teams='{{ user.teams|tojson }}'
-    data-name="{{ user.display_name }}">
-    {% if user.custom_status_emoji_url %}
-    <img src="{{ user.custom_status_emoji_url }}" class="status-emoji"
-        title="{{ user.custom_status.text|default('') }}">
-    {% endif %}
-
-    {% if link_to_detail %}
-    <a href="{{ url_for('user_detail', username=user.username) }}" class="card-link">
+    <div class="user-card glass-card {{ extra_classes }}"
+         data-teams='{{ user.teams|tojson }}'
+         data-name="{{ user.display_name }}">
+        {% if user.custom_status_emoji_url %}
+            <img src="{{ user.custom_status_emoji_url }}"
+                 class="status-emoji"
+                 title="{{ user.custom_status.text|default("") }}">
         {% endif %}
-        <div class="user-header">
-            <img src="{{ user.image_url }}" alt="{{ user.display_name }}" class="profile-image">
-            <div class="user-info">
-                <h2>{{ user.display_name }}</h2>
-                <span class="user-username">@{{ user.username }}</span>
-            </div>
-        </div>
         {% if link_to_detail %}
-    </a>
-    {% endif %}
-
-    <div class="user-details">
-        {% if user.position %}
-        <div class="position-info">{{ user.position }}</div>
-        {% endif %}
-
-        {% if user.teams %}
-        <div class="groups-section">
-            <h3>Teams</h3>
-            <div class="tags">
-                {% for team in user.teams %}
-                <a href="/team/{{ team.team_name }}" class="tag {% if team.is_lead %}tag-lead{% endif %} js-team-filter"
-                    title="{% if team.is_lead %}Team Lead{% else %}Member{% endif %}">
-                    {{ team.team_name }}
-                    {% if team.is_lead %}★{% endif %}
-                </a>
-                {% endfor %}
+            <a href="{{ url_for('user_detail', username=user.username) }}"
+               class="card-link">
+            {% endif %}
+            <div class="user-header">
+                <img src="{{ user.image_url }}"
+                     alt="{{ user.display_name }}"
+                     class="profile-image">
+                <div class="user-info">
+                    <h2>{{ user.display_name }}</h2>
+                    <span class="user-username">@{{ user.username }}</span>
+                </div>
             </div>
+            {% if link_to_detail %}</a>{% endif %}
+        <div class="user-details">
+            {% if user.position %}<div class="position-info">{{ user.position }}</div>{% endif %}
+            {% if user.teams %}
+                <div class="groups-section">
+                    <h3>Teams</h3>
+                    <div class="tags">
+                        {% for team in user.teams %}
+                            <a href="/team/{{ team.team_name }}"
+                               class="tag {% if team.is_lead %}tag-lead{% endif %} js-team-filter"
+                               title="{% if team.is_lead %}Team Lead{% else %}Member{% endif %}">
+                                {{ team.team_name }}
+                                {% if team.is_lead %}★{% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
-</div>
 {% endmacro %}

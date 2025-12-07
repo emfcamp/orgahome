@@ -18,4 +18,10 @@
     enable = true;
     excludes = [ "*.html" ]; # makes a mess of Jinja
   };
+
+  # Jinja templates
+  programs.djlint.enable = true;
+
+  # GitHub Actions
+  programs.zizmor.enable = true;
 }

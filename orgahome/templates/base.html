@@ -1,46 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}EMF Orga Directory{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="{{ url_for('static', filename='fonts/Outfit/font.css') }}" rel="stylesheet">
-</head>
-
-<body>
-    <div class="background-blobs">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
-
-    <header class="glass-header">
-        <div class="header-left">
-            <h1><a href="{{ url_for('index') }}" class="logo-link">EMF Orga Directory</a></h1>
-            <nav class="main-nav">
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="https://identity.emfcamp.org" target="_blank" rel="noopener noreferrer">SSO</a></li>
-                    <li><a href="https://wiki.orga.emfcamp.org" target="_blank" rel="noopener noreferrer">Wiki</a></li>
-                    <li><a href="https://chat.orga.emfcamp.org" target="_blank" rel="noopener noreferrer">Chat</a></li>
-                </ul>
-            </nav>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block title %}EMF Orga Directory{% endblock %}
+        </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link href="{{ url_for('static', filename='fonts/Outfit/font.css') }}"
+              rel="stylesheet">
+    </head>
+    <body>
+        <div class="background-blobs">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
         </div>
-
-        <div class="header-right">
-            {% block header_controls %}{% endblock %}
-            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle navigation">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </header>
-
-    {% block content %}{% endblock %}
-
-    {% block scripts %}{% endblock %}
-</body>
-
+        <header class="glass-header">
+            <div class="header-left">
+                <h1>
+                    <a href="{{ url_for("index") }}" class="logo-link">EMF Orga Directory</a>
+                </h1>
+                <nav class="main-nav">
+                    <ul class="nav-links" id="nav-links">
+                        <li>
+                            <a href="https://identity.emfcamp.org"
+                               target="_blank"
+                               rel="noopener noreferrer">SSO</a>
+                        </li>
+                        <li>
+                            <a href="https://wiki.orga.emfcamp.org"
+                               target="_blank"
+                               rel="noopener noreferrer">Wiki</a>
+                        </li>
+                        <li>
+                            <a href="https://chat.orga.emfcamp.org"
+                               target="_blank"
+                               rel="noopener noreferrer">Chat</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-right">
+                {% block header_controls %}{% endblock %}
+                <button class="hamburger-menu"
+                        id="hamburger-menu"
+                        aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </header>
+        {% block content %}{% endblock %}
+        {% block scripts %}{% endblock %}
+    </body>
 </html>

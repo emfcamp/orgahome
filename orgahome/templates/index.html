@@ -1,54 +1,32 @@
 {% extends "base.html" %}
 {% from "components/user_card.html" import user_card %}
-
 {% block title %}EMF Orga Directory{% endblock %}
-
 {% block header_controls %}
-<div class="header-controls">
-    <select id="team-filter" class="glass-select">
-        <option value="all">All Teams</option>
-        {% for team in teams %}
-        <option value="{{ team }}">{{ team }}</option>
-        {% endfor %}
-    </select>
-</div>
-{% endblock %}
-
-{% block content %}
-<main class="container">
-    <div class="user-grid" id="user-grid">
-        {% if selected_team %}
-        {% if leads %}
-        <h2 class="grid-header">Team Leads</h2>
-        {% for user in leads %}
-        {{ user_card(user) }}
-        {% endfor %}
-        {% endif %}
-
-        {% if members %}
-        <h2 class="grid-header">Team Members</h2>
-        {% for user in members %}
-        {{ user_card(user) }}
-        {% endfor %}
-        {% endif %}
-
-        {% if not leads and not members %}
-        <div class="empty-message">No active members found in this team.</div>
-        {% endif %}
-
-        {% for user in others %}
-        {{ user_card(user, extra_classes='hidden-card') }}
-        {% endfor %}
-
-        {% else %}
-        {% for user in users %}
-        {{ user_card(user) }}
-        {% endfor %}
-        {% endif %}
+    <div class="header-controls">
+        <select id="team-filter" class="glass-select">
+            <option value="all">All Teams</option>
+            {% for team in teams %}<option value="{{ team }}">{{ team }}</option>{% endfor %}
+        </select>
     </div>
-</main>
 {% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% block content %}
+    <main class="container">
+        <div class="user-grid" id="user-grid">
+            {% if selected_team %}
+                {% if leads %}
+                    <h2 class="grid-header">Team Leads</h2>
+                    {% for user in leads %}{{ user_card(user) }}{% endfor %}
+                {% endif %}
+                {% if members %}
+                    <h2 class="grid-header">Team Members</h2>
+                    {% for user in members %}{{ user_card(user) }}{% endfor %}
+                {% endif %}
+                {% if not leads and not members %}<div class="empty-message">No active members found in this team.</div>{% endif %}
+                {% for user in others %}{{ user_card(user, extra_classes='hidden-card') }}{% endfor %}
+            {% else %}
+                {% for user in users %}{{ user_card(user) }}{% endfor %}
+            {% endif %}
+        </div>
+    </main>
 {% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='main.js') }}"></script>{% endblock %}
