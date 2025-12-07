@@ -12,4 +12,10 @@
 
   # TOML
   programs.taplo.enable = true;
+
+  # JS/CSS/JSON
+  programs.deno = {
+    enable = true;
+    excludes = [ "*.html" ]; # makes a mess of Jinja
+  };
 }
