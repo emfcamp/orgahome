@@ -4,7 +4,7 @@ baseimagename="ghcr.io/$GITHUB_REPO"
 imagename="$baseimagename:$GITHUB_REF_NAME"
 
 # Create a new manifest
-read -ra references < <(find containers -name '*.tar.gz' | sed 's,^,docker-archive:,')
+mapfile -d $'\0' references < <(find containers -name '*.tar.gz' -print0 | sed -z 's,^,docker-archive:,')
 echo "Creating new manifest as $imagename"
 echo "Reference images: ${references[*]}"
 PODMAN="podman"
