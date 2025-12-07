@@ -297,8 +297,8 @@ body {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  width: 24px;
-  height: 24px;
+  max-width: 24px;
+  max-height: 24px;
   filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
   transition: transform 0.2s;
 }
