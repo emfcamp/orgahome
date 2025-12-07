@@ -40,7 +40,7 @@ def default_workers() -> int:
 @click.option("-h", "--host", default="::")
 @click.option("-p", "--port", default=5000, type=int)
 @click.option("-w", "--workers", default=None, type=int)
-@click.option("--forwarded-allow-ips", default=None, type=list[str])
+@click.option("--forwarded-allow-ips", default=[], type=str, multiple=True)
 def uvicorn_command(host, port, workers, forwarded_allow_ips):
     """Launch Flask serving using uvicorn."""
     config = uvicorn.Config(
@@ -48,7 +48,7 @@ def uvicorn_command(host, port, workers, forwarded_allow_ips):
         port=port,
         app=create_asgi_app(),
         workers=default_workers() if workers is None else workers,
-        forwarded_allow_ips=forwarded_allow_ips,
+        forwarded_allow_ips=list(forwarded_allow_ips),
     )
     server = uvicorn.Server(config)
     server.run()
