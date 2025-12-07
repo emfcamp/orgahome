@@ -135,9 +135,7 @@
             config = {
               Entrypoint = [ "${default}/bin/orgahome" ];
               Cmd = [
-                "run"
-                "--host"
-                "::"
+                "gunicorn"
               ];
               ExposedPorts = {
                 "5000/tcp" = { };

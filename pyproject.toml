@@ -9,6 +9,7 @@ dependencies = [
   "flask-oidc>=2.4.0",
   "python-dotenv>=1.2.1",
   "requests>=2.32.5",
+  "gunicorn[eventlet,setproctitle]>=23.0.0",
 ]
 
 [dependency-groups]
