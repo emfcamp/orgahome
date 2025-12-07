@@ -19,3 +19,4 @@ result*
 # Swap files
 *~
 .*.sw[a-z]
+.sw[a-z]

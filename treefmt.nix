@@ -24,4 +24,8 @@
 
   # GitHub Actions
   programs.zizmor.enable = true;
+
+  # Shell
+  programs.shellcheck.enable = true;
+  programs.shfmt.enable = true;
 }

@@ -65,37 +65,10 @@ jobs:
           path: containers
           pattern: container-*
           merge-multiple: true
-      - name: Merge containers
-        shell: nix-shell -p podman --run "sudo -E bash -e {0}"
+      - name: Merge and upload containers
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REF: ${{ github.ref_name }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_REPO: ${{ github.repository }}
-        run: |
-          baseimagename="ghcr.io/$GITHUB_REPO"
-          imagename="$baseimagename:$GITHUB_REF"
-
-          # Create a new manifest
-          references="$(ls containers/*.tar.gz | sed 's,^,docker-archive:,')"
-          echo "Creating new manifest as $imagename"
-          echo "Reference images: $references"
-          podman manifest create \
-            --annotation "org.opencontainers.image.vendor=EMFCamp" \
-            --annotation "org.opencontainers.image.title=Orga Home" \
-            --annotation "org.opencontainers.image.created=$(date --iso-8601=seconds)" \
-            --annotation "org.opencontainers.image.revision=$(git rev-parse HEAD)" \
-            --annotation "org.opencontainers.image.url=https://github.com/$GITHUB_REPO" \
-            --annotation "org.opencontainers.image.source=https://github.com/$GITHUB_REPO" \
-            --all \
-            $imagename \
-            $references
-
-          # Dump out the manifest we created
-          podman manifest inspect $imagename
-
-          # Log into GHCR
-          echo $GITHUB_TOKEN | podman login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-
-          # Upload the container, tagging it with the branch name
-          podman manifest push --all --format oci $imagename docker://$imagename
+        run: nix run '.#upload-container'

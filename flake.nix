@@ -137,6 +137,16 @@
               Cmd = [ "run" ];
             };
           };
+
+          upload-container = pkgs.writeShellApplication {
+            name = "upload-container";
+
+            runtimeInputs = [
+              pkgs.podman
+            ];
+
+            text = builtins.readFile ./hack/upload-container.sh;
+          };
         }
       );
 
