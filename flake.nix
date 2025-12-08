@@ -94,6 +94,7 @@
           pkgs,
           pythonSet,
           devVirtualenv,
+          treefmtEval,
           ...
         }:
         {
@@ -101,6 +102,7 @@
             packages = [
               devVirtualenv
               pkgs.uv
+              (treefmtEval.config.build.wrapper) # provide treefmt CLI
             ];
             env = {
               UV_NO_SYNC = "1";
