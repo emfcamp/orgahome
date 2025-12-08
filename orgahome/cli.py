@@ -1,5 +1,7 @@
 import logging
 import multiprocessing
+import pathlib
+import shutil
 
 import click
 import uvicorn
@@ -44,6 +46,21 @@ def uvicorn_command(host, port, workers, forwarded_allow_ips, debug):
         workers=workers,
         forwarded_allow_ips=list(forwarded_allow_ips),
     )
+
+
+@cli.command("compilestatic")
+@click.option("-d", "--dest", type=pathlib.Path)
+def compilestatic_command(dest: pathlib.Path | None = None):
+    """Compile static files."""
+    from orgahome.staticfiles import STATIC_COMPILED_PATH, compile_static_files
+
+    dest = pathlib.Path(dest or STATIC_COMPILED_PATH)
+
+    if dest.exists():
+        shutil.rmtree(dest)
+    dest.mkdir()
+
+    compile_static_files(dest_path=dest)
 
 
 if __name__ == "__main__":

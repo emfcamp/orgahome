@@ -5,7 +5,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass
-from typing import Any, TypedDict
+from typing import TypedDict
 
 import aiohttp
 

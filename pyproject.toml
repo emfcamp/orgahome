@@ -3,7 +3,7 @@ name = "orgahome"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
   "starlette>=0.50.0",
   "uvicorn[standard]>=0.38.0",
@@ -31,4 +31,3 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
-ignore = ["F401"]

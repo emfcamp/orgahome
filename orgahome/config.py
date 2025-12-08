@@ -7,6 +7,7 @@ dotenv.load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev_key")
+    ORGAHOME_DIST_ROOT = os.environ.get("ORGAHOME_DIST_ROOT")
 
     # OIDC Configuration
     OIDC_CLIENT_SECRETS = os.environ.get("OIDC_CLIENT_SECRETS", "client_secrets.json")

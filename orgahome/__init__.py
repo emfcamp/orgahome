@@ -1,1 +1,1 @@
-from orgahome.cli import cli
+from orgahome.cli import cli as cli

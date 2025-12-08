@@ -51,7 +51,7 @@
           f (rec {
             inherit system;
             pkgs = nixpkgs.legacyPackages.${system};
-            python = pkgs.python3;
+            python = pkgs.python314;
             pythonSet =
               (pkgs.callPackage pyproject-nix.build.packages {
                 inherit python;
@@ -132,6 +132,14 @@
             venv = virtualenv;
             package = pythonSet.orgahome;
           };
+          dist =
+            pkgs.runCommand "orgahome-dist"
+              {
+                nativeBuildInputs = [ default ];
+              }
+              ''
+                orgahome compilestatic -d $out
+              '';
           container = pkgs.dockerTools.streamLayeredImage {
             name = "orgahome";
             fakeRootCommands = ''
@@ -149,6 +157,10 @@
               ExposedPorts = {
                 "5000/tcp" = { };
               };
+              Env = [
+                "ORGAHOME_DIST_ROOT=${dist}"
+                "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              ];
             };
           };
 

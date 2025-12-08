@@ -5,10 +5,6 @@
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --accent-color: #38bdf8;
-  --status-online: #4ade80;
-  --status-away: #facc15;
-  --status-dnd: #f87171;
-  --status-offline: #94a3b8;
   --font-family: "Outfit", sans-serif;
 }
 
@@ -177,36 +173,6 @@ body {
   display: none;
 }
 
-/* Status Indicator */
-.status-indicator {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.status-indicator.online {
-  background-color: var(--status-online);
-  box-shadow: 0 0 10px var(--status-online);
-}
-
-.status-indicator.away {
-  background-color: var(--status-away);
-  box-shadow: 0 0 10px var(--status-away);
-}
-
-.status-indicator.dnd {
-  background-color: var(--status-dnd);
-  box-shadow: 0 0 10px var(--status-dnd);
-}
-
-.status-indicator.offline {
-  background-color: var(--status-offline);
-}
-
 /* User Info */
 .user-header {
   display: flex;
@@ -301,7 +267,8 @@ body {
   transition: transform 0.2s;
 }
 
-.status-emoji, .status-emoji img {
+.status-emoji,
+.status-emoji img {
   max-width: 24px;
   max-height: 24px;
 }
