@@ -43,13 +43,14 @@ class UFFDUser(TypedDict):
 
 
 class UFFDClient:
-    def __init__(self, api_url: str, username: str, password: str) -> None:
+    def __init__(self, session: aiohttp.ClientSession, api_url: str, username: str, password: str) -> None:
+        self.session = session
         self.api_url: str = api_url.rstrip("/")
         self.auth = aiohttp.BasicAuth(username, password)
 
-    async def get_users(self, session: aiohttp.ClientSession) -> list[UFFDUser]:
+    async def get_users(self) -> list[UFFDUser]:
         try:
-            async with session.get(f"{self.api_url}/getusers", auth=self.auth) as response:
+            async with self.session.get(f"{self.api_url}/getusers", auth=self.auth) as response:
                 response.raise_for_status()
                 data = await response.json()
                 return data
@@ -79,17 +80,18 @@ class MattermostUser(TypedDict):
 
 
 class MattermostClient:
-    def __init__(self, api_url: str, token: str) -> None:
+    def __init__(self, session: aiohttp.ClientSession, api_url: str, token: str) -> None:
+        self.session = session
         self.api_url: str = api_url.rstrip("/")
         self.headers: dict[str, str] = {"Authorization": f"Bearer {token}"}
 
-    async def get_all_active_users(self, session: aiohttp.ClientSession) -> list[MattermostUser]:
+    async def get_all_active_users(self) -> list[MattermostUser]:
         users: list[MattermostUser] = []
         page = 0
         per_page = 200
         while True:
             try:
-                async with session.get(
+                async with self.session.get(
                     f"{self.api_url}/users",
                     headers=self.headers,
                     params={"page": str(page), "per_page": str(per_page), "active": "true"},
@@ -229,12 +231,10 @@ class EnhancedUser:
         return f"/mm_emoji/{emoji_name}"
 
 
-async def fetch_directory_data(
-    session: aiohttp.ClientSession, uffd_client: UFFDClient, mm_client: MattermostClient
-) -> dict[str, EnhancedUser]:
+async def fetch_directory_data(uffd_client: UFFDClient, mm_client: MattermostClient) -> dict[str, EnhancedUser]:
     # Run async calls
-    uffd_task = uffd_client.get_users(session)
-    mm_task = mm_client.get_all_active_users(session)
+    uffd_task = uffd_client.get_users()
+    mm_task = mm_client.get_all_active_users()
 
     uffd_users, mm_users = await asyncio.gather(uffd_task, mm_task)
 

@@ -4,7 +4,7 @@ import aiohttp
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response, StreamingResponse
 
-from orgahome import gif
+from orgahome import gif, services
 
 logger = logging.getLogger(__name__)
 
@@ -46,13 +46,14 @@ async def mm_url_proxy(request: Request, url: str, remove_animation: bool = Fals
 
 
 async def mm_emoji_proxy(request: Request) -> Response:
+    mm_client: services.MattermostClient = request.state.mm_client
     emoji_name = request.path_params.get("emoji_name")
     try:
-        emoji_id = await request.state.mm_client.get_emoji_id_by_name(request.state.client_session, emoji_name)
+        emoji_id = await mm_client.get_emoji_id_by_name(emoji_name)
         if not emoji_id:
             return Response("Not found", status_code=404)
 
-        url = request.state.mm_client.get_custom_emoji_image_url(emoji_id)
+        url = mm_client.get_custom_emoji_image_url(emoji_id)
         return await mm_url_proxy(request, url, request.query_params.get("remove_animation") == "true")
     except Exception as e:
         logger.error(f"Failed to proxy emoji {emoji_name}: {e}")
@@ -60,9 +61,10 @@ async def mm_emoji_proxy(request: Request) -> Response:
 
 
 async def mm_avatar_proxy(request: Request) -> Response:
+    mm_client: services.MattermostClient = request.state.mm_client
     user_id = request.path_params.get("user_id")
     try:
-        url = request.state.mm_client.get_user_image_url(user_id)
+        url = mm_client.get_user_image_url(user_id)
         return await mm_url_proxy(request, url)
     except Exception as e:
         logger.error(f"Failed to proxy image for {user_id}: {e}")

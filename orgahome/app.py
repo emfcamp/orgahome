@@ -45,8 +45,8 @@ def lifespan_factory(static_files: staticfiles.StaticFilesBase):
         static_files.register_template_functions(templates)
 
         async with aiohttp.ClientSession() as session:
-            uffd_client = UFFDClient(Config.UFFD_API_URL, Config.UFFD_USER, Config.UFFD_PASSWORD)
-            mm_client = MattermostClient(Config.MATTERMOST_API_URL, Config.MATTERMOST_TOKEN)
+            uffd_client = UFFDClient(session, Config.UFFD_API_URL, Config.UFFD_USER, Config.UFFD_PASSWORD)
+            mm_client = MattermostClient(session, Config.MATTERMOST_API_URL, Config.MATTERMOST_TOKEN)
 
             oauth = OAuth()
             oauth.register(
