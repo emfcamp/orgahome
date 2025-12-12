@@ -8,6 +8,7 @@ from dataclasses import asdict, dataclass
 from typing import TypedDict
 
 import aiohttp
+import starlette.requests
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +58,10 @@ class UFFDClient:
         except aiohttp.ClientError as e:
             logger.error(f"Error fetching users from UFFD: {e}")
             return []
+
+    @staticmethod
+    def from_request(request: starlette.requests.HTTPConnection) -> UFFDClient:
+        return request.state.uffd_client
 
 
 MattermostUserProps = TypedDict(
@@ -126,6 +131,10 @@ class MattermostClient:
 
     def get_custom_emoji_image_url(self, emoji_id: str) -> str:
         return f"{self.api_url}/emoji/{emoji_id}/image"
+
+    @staticmethod
+    def from_request(request: starlette.requests.HTTPConnection) -> MattermostClient:
+        return request.state.mm_client
 
 
 class MattermostCustomStatus(TypedDict):

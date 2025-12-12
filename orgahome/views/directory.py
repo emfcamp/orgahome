@@ -2,12 +2,12 @@ from starlette.exceptions import HTTPException
 from starlette.requests import Request
 from starlette.responses import Response
 
-from orgahome.services import EnhancedUser, fetch_directory_data
+from orgahome.services import EnhancedUser, MattermostClient, UFFDClient, fetch_directory_data
 
 
 async def index(request: Request) -> Response:
     team_name = request.path_params.get("team_name")
-    user_map = await fetch_directory_data(request.state.uffd_client, request.state.mm_client)
+    user_map = await fetch_directory_data(UFFDClient.from_request(request), MattermostClient.from_request(request))
     enhanced_users = list(user_map.values())
     all_teams: set[str] = set()
 
@@ -59,7 +59,7 @@ async def user_detail(request: Request) -> Response:
     if not username or not isinstance(username, str):
         raise HTTPException(status_code=404)
 
-    user_map = await fetch_directory_data(request.state.uffd_client, request.state.mm_client)
+    user_map = await fetch_directory_data(UFFDClient.from_request(request), MattermostClient.from_request(request))
     user = user_map.get(username)
     if not user:
         raise HTTPException(status_code=404)

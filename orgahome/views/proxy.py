@@ -46,8 +46,10 @@ async def mm_url_proxy(request: Request, url: str, remove_animation: bool = Fals
 
 
 async def mm_emoji_proxy(request: Request) -> Response:
-    mm_client: services.MattermostClient = request.state.mm_client
+    mm_client = services.MattermostClient.from_request(request)
     emoji_name = request.path_params.get("emoji_name")
+    if not emoji_name or not isinstance(emoji_name, str):
+        return Response("Invalid emoji name", status_code=400)
     try:
         emoji_id = await mm_client.get_emoji_id_by_name(emoji_name)
         if not emoji_id:
@@ -61,8 +63,10 @@ async def mm_emoji_proxy(request: Request) -> Response:
 
 
 async def mm_avatar_proxy(request: Request) -> Response:
-    mm_client: services.MattermostClient = request.state.mm_client
+    mm_client = services.MattermostClient.from_request(request)
     user_id = request.path_params.get("user_id")
+    if not user_id or not isinstance(user_id, str):
+        return Response("Invalid user ID", status_code=400)
     try:
         url = mm_client.get_user_image_url(user_id)
         return await mm_url_proxy(request, url)
