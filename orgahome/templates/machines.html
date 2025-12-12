@@ -6,6 +6,7 @@
             <table class="machines-table">
                 <thead>
                     <tr>
+                        <th class="machine-toggle-cell"></th>
                         <th>Hostname</th>
                         <th>Location</th>
                         <th>Description</th>
@@ -17,6 +18,9 @@
                 <tbody>
                     {% for machine in combined_info %}
                         <tr>
+                            <td>
+                                <button class="machine-toggle-btn" aria-label="Toggle details">▶</button>
+                            </td>
                             <td>{{ machine.inventory.certname.removesuffix(".emfcamp.org") }}</td>
                             <td class="{% if not machine.emf_info.location or machine.emf_info.location == "[unset]" %}text-muted{% endif %}">
                                 {{ machine.emf_info.location | default("[unset]") }}
@@ -36,9 +40,44 @@
                                 {{ machine.node.latest_report_status }}
                             </td>
                         </tr>
+                        <tr class="machine-details-row">
+                            <td colspan="7">
+                                <div class="machine-details-content">
+                                    {% if machine.websites %}
+                                        <div class="detail-section">
+                                            <h4>Websites</h4>
+                                            <ul>
+                                                {% for site in machine.websites %}
+                                                    <li>
+                                                        <a href="https://{{ site }}"
+                                                           target="_blank"
+                                                           rel="noopener noreferrer"
+                                                           class="website-link">{{ site }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                    <div class="detail-section">
+                                        <h4>Hardware</h4>
+                                        <ul>
+                                            <li>CPU: {{ machine.inventory.facts.processors.count }} cores</li>
+                                            <li>RAM: {{ machine.inventory.facts.memory.system.total }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="detail-section">
+                                        <h4>System</h4>
+                                        <ul>
+                                            <li>Architecture: {{ machine.inventory.facts.os.architecture }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </main>
 {% endblock %}
+{% block scripts %}<script src="{{ static_url_for('main.js') }}"></script>{% endblock %}

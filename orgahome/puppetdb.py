@@ -33,8 +33,23 @@ class PuppetOSFact(typing.TypedDict):
     architecture: str
 
 
+class PuppetProcessorFact(typing.TypedDict):
+    count: int
+    physicalcount: int
+
+
+class PuppetMemorySystemFact(typing.TypedDict):
+    total: str
+
+
+class PuppetMemoryFact(typing.TypedDict):
+    system: PuppetMemorySystemFact
+
+
 class PuppetHostFacts(typing.TypedDict):
     os: PuppetOSFact
+    processors: PuppetProcessorFact
+    memory: PuppetMemoryFact
     uptime: str
 
 
@@ -59,6 +74,11 @@ class PuppetInventoryHost(typing.TypedDict):
 class EMFPuppetInfo(typing.TypedDict):
     location: str
     description: str
+
+
+class PuppetWebsite(typing.TypedDict):
+    certname: str
+    title: str
 
 
 class PuppetNode(typing.TypedDict):
@@ -88,6 +108,10 @@ class BasePuppetDBClient(abc.ABC):
 
     @abc.abstractmethod
     async def query_emf_info(self) -> dict[str, EMFPuppetInfo]:
+        pass
+
+    @abc.abstractmethod
+    async def query_websites(self) -> dict[str, list[str]]:
         pass
 
     @abc.abstractmethod
@@ -126,6 +150,25 @@ class PuppetDBClient(BasePuppetDBClient):
         data = await self.query_resources(["=", "type", "Emf_facts::Emf_host_info"])
         return {resource["certname"]: resource["parameters"] for resource in data}
 
+    async def query_websites(self) -> dict[str, list[str]]:
+        data = await self.query_resources(
+            ["and", ["=", "type", "Nginx::Resource::Server"], ["~", "title", "\\.emfcamp\\.org$"]]
+        )
+        websites: dict[str, list[str]] = {}
+        for resource in data:
+            title = resource["title"]
+            if not title.endswith(".emfcamp.org"):
+                continue
+
+            certname = resource["certname"]
+            if certname not in websites:
+                websites[certname] = []
+            websites[certname].append(title)
+
+        for certname in websites:
+            websites[certname].sort()
+        return websites
+
     async def query_nodes(self) -> list[PuppetNode]:
         try:
             async with self.session.get("/pdb/query/v4/nodes") as response:
@@ -146,6 +189,10 @@ class DummyPuppetDBClient(BasePuppetDBClient):
         return []
 
     async def query_emf_info(self) -> dict[str, EMFPuppetInfo]:
+        logger.error("PuppetDB querying is disabled (DummyPuppetDBClient in use)")
+        return {}
+
+    async def query_websites(self) -> dict[str, list[str]]:
         logger.error("PuppetDB querying is disabled (DummyPuppetDBClient in use)")
         return {}
 

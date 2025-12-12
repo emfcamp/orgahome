@@ -501,3 +501,64 @@ body {
 .machines-status[data-status="failed"] {
   color: #ff9e80;
 }
+
+/* Machine Details */
+.machine-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.machine-toggle-btn:hover {
+  color: var(--text-primary);
+}
+
+.machine-toggle-btn.expanded {
+  transform: rotate(90deg);
+}
+
+.machine-details-row {
+  display: none;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.machine-details-row.visible {
+  display: table-row;
+}
+
+.machine-details-content {
+  padding: 1rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.detail-section h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-section ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.detail-section li {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.machine-toggle-cell {
+  width: 40px;
+}
+
+.website-link {
+  color: inherit;
+}

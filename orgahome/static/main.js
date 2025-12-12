@@ -168,3 +168,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+/* Machine Details Toggle */
+document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".machine-toggle-btn")) {
+      const btn = e.target.closest(".machine-toggle-btn");
+      const row = btn.closest("tr");
+      const detailsRow = row.nextElementSibling;
+      if (
+        detailsRow &&
+        detailsRow.classList.contains("machine-details-row")
+      ) {
+        detailsRow.classList.toggle("visible");
+        btn.classList.toggle("expanded");
+      }
+    }
+  });
+});
