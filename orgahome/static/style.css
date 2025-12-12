@@ -163,7 +163,7 @@ body {
   overflow: hidden;
 }
 
-.glass-card:hover {
+.glass-card:not(.glass-card-no-hover):hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   border-color: rgba(255, 255, 255, 0.2);
@@ -484,4 +484,20 @@ body {
 
 .machines-table .distro-cell[data-distro="Debian"][data-major="12"] {
   color: #ffc0cb;
+}
+
+.machines-status {
+  font-family: monospace;
+}
+
+.machines-status[data-status="unchanged"] {
+  color: #1de9b6;
+}
+
+.machines-status[data-status="changed"] {
+  color: #eeff41;
+}
+
+.machines-status[data-status="failed"] {
+  color: #ff9e80;
 }

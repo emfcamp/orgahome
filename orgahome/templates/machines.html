@@ -2,7 +2,7 @@
 {% block title %}EMF{% endblock %}
 {% block content %}
     <main class="container">
-        <div class="glass-card">
+        <div class="glass-card glass-card-no-hover">
             <table class="machines-table">
                 <thead>
                     <tr>
@@ -11,6 +11,7 @@
                         <th>Description</th>
                         <th>Distro</th>
                         <th>Last contact</th>
+                        <th>Last status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +30,11 @@
                                 data-minor="{{ machine.inventory.facts.os.distro.release.minor }}">
                                 {{ machine.inventory.facts.os.distro.id }} {{ machine.inventory.facts.os.distro.release.full }}
                             </td>
-                            <td>{{ machine.inventory.timestamp | from_iso | friendly_date }}</td>
+                            <td>{{ machine.node.report_timestamp | from_iso | friendly_date }}</td>
+                            <td class="machines-status"
+                                data-status="{{ machine.node.latest_report_status }}">
+                                {{ machine.node.latest_report_status }}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -61,9 +61,37 @@ class EMFPuppetInfo(typing.TypedDict):
     description: str
 
 
+class PuppetNode(typing.TypedDict):
+    certname: str
+    catalog_environment: str
+    facts_environment: str
+    report_environment: str
+    catalog_timestamp: str  # ISO-8601
+    facts_timestamp: str  # ISO-8601
+    report_timestamp: str  # ISO-8601
+    latest_report_status: str  # changed/unchanged/failed
+    latest_report_noop: bool
+    latest_report_noop_pending: bool
+    latest_report_corrective_change: str | None
+    latest_report_hash: str
+    latest_report_job_id: str | None
+
+
 class BasePuppetDBClient(abc.ABC):
     @abc.abstractmethod
     async def query_inventory(self) -> list[PuppetInventoryHost]:
+        pass
+
+    @abc.abstractmethod
+    async def query_resources(self, query: PQL) -> list[dict[str, typing.Any]]:
+        pass
+
+    @abc.abstractmethod
+    async def query_emf_info(self) -> dict[str, EMFPuppetInfo]:
+        pass
+
+    @abc.abstractmethod
+    async def query_nodes(self) -> list[PuppetNode]:
         pass
 
 
@@ -98,9 +126,30 @@ class PuppetDBClient(BasePuppetDBClient):
         data = await self.query_resources(["=", "type", "Emf_facts::Emf_host_info"])
         return {resource["certname"]: resource["parameters"] for resource in data}
 
+    async def query_nodes(self) -> list[PuppetNode]:
+        try:
+            async with self.session.get("/pdb/query/v4/nodes") as response:
+                response.raise_for_status()
+                return await response.json()
+        except aiohttp.ClientError as e:
+            raise PuppetDBClientException(f"Failed to fetch nodes from PuppetDB: {e}") from e
+        pass
+
 
 class DummyPuppetDBClient(BasePuppetDBClient):
     async def query_inventory(self) -> list[PuppetInventoryHost]:
+        logger.error("PuppetDB querying is disabled (DummyPuppetDBClient in use)")
+        return []
+
+    async def query_resources(self, query: PQL) -> list[dict[str, typing.Any]]:
+        logger.error("PuppetDB querying is disabled (DummyPuppetDBClient in use)")
+        return []
+
+    async def query_emf_info(self) -> dict[str, EMFPuppetInfo]:
+        logger.error("PuppetDB querying is disabled (DummyPuppetDBClient in use)")
+        return {}
+
+    async def query_nodes(self) -> list[PuppetNode]:
         logger.error("PuppetDB querying is disabled (DummyPuppetDBClient in use)")
         return []
 
